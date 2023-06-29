@@ -1,0 +1,24 @@
+{
+  "name": "proyecto-final-modulo1",
+  "version": "1.0.0",
+  "description": "Proyecto final del módulo 1: \"programació web entorn client\". Realizado con HTML, CSS, Tailwind y JavaScript.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/irenevg18/Proyecto-final-modulo1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/irenevg18/Proyecto-final-modulo1/issues"
+  },
+  "homepage": "https://github.com/irenevg18/Proyecto-final-modulo1#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.3.2"
+  }
+}
