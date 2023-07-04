@@ -10,11 +10,21 @@
   <body>
     <h1 class="text-3xl font-bold underline text-blue-700">Hello world!</h1>
     <div class="grid grid-cols-4" id="gridProducts"></div>
-    <hr>
-    <div id="shopingCart">
-      <button class="bg-lime-600 hover:bg-lime-400 px-4 py-1 rounded-lg" id="cleanButton">clean</button>
+    <hr class="my-20"/>
+    <div class="mx-10 mb-20">
+      <p id="total">Total:</p>
+      <ul id="shopingCart"></ul>
+        <div>
+        <button
+          class="bg-rose-600 hover:bg-rose-400 px-4 py-1 rounded-lg"
+          id="cleanButton"
+        >
+          clean
+        </button>
+        <button class="bg-lime-600 hover:bg-lime-400 px-4 py-1 rounded-lg"
+        id="payButton">Pay</button>
+      </div>
     </div>
-
     <script src="index.js"></script>
   </body>
 </html>

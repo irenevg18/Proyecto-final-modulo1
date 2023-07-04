@@ -1,8 +1,6 @@
-let id = 0;
-
 const products = [
   {
-    id: id++,
+    id: 0,
     name: "Pastanaga",
     description: "Les conrea en Lluís a Manresa",
     images: [
@@ -16,7 +14,7 @@ const products = [
     coin: "€",
   },
   {
-    id: id++,
+    id: 1,
     name: "Cogombre",
     description: "Els conrea la Maria a Cardona",
     images: [
@@ -30,7 +28,7 @@ const products = [
     coin: "€",
   },
   {
-    id: id++,
+    id: 2,
     name: "Patates",
     description: "Les conrea la Maria a Cardona",
     images: [
@@ -44,7 +42,7 @@ const products = [
     coin: "€",
   },
   {
-    id: id++,
+    id: 3,
     name: "Pèsols",
     description: "Els conrea la Carme a Amposta",
     images: [
@@ -58,7 +56,7 @@ const products = [
     coin: "€",
   },
   {
-    id: id++,
+    id: 4,
     name: "Pebrot vermell",
     description: "Els conreen la Julia i l'Anna al Prat de Llobregat",
     images: [
@@ -72,7 +70,7 @@ const products = [
     coin: "€",
   },
   {
-    id: id++,
+    id: 5,
     name: "Carxofa",
     description: "Les conreen la Julia i l'Anna al Prat de Llobregat",
     images: [
@@ -86,50 +84,103 @@ const products = [
     coin: "€",
   },
 ];
-
+let totalPrice = 0;
+let cartProducts = [];
 const gridProducts = document.getElementById("gridProducts");
+const cleanButton = document.getElementById("cleanButton");
+const total = document.getElementById("total");
+const shopingCart = document.getElementById("shopingCart");
+const payButton = document.getElementById("payButton");
 
-window.addEventListener("load", displayProducts());
+window.addEventListener("load", displayProducts);
+payButton.addEventListener("click", payProducts);
+cleanButton.addEventListener("click", cleanCart);
 
-function displayProducts() {
+function displayProducts(event) {
+  event.preventDefault();
   products.map((e) => {
+    let id;
     const card = document.createElement("div");
-    card.id = e.id;
+    id = e.id;
     let i = 0;
     card.innerHTML = `
         <div class="flex items-center">
-            <button class="bg-green-400 px-4 py-2 rounded-full hover:bg-green-300 hover:-translate-x-1" id="prevImage"><</button>
+            <button class="bg-lime-600 px-4 py-2 rounded-full hover:bg-lime-400 hover:-translate-x-1" id="prevImage"><</button>
             <div class="h-60 w-60">
                 <img class="w-full h-full object-cover" src="${e.images[i]}" id="cardImage">
             </div>
-            <button class="bg-green-400 px-4 py-2 rounded-full hover:bg-green-300 hover:translate-x-1" id="nextImage">></button>
+            <button class="bg-lime-600 px-4 py-2 rounded-full hover:bg-lime-400 hover:translate-x-1" id="nextImage">></button>
         </div>
         <h3>${e.name}</h3>
         <p>${e.description}</p>
-        <p>${e.price}${e.coin} / ${e.unit}</p>`;
+        <p>${e.price}${e.coin} / ${e.unit}</p>
+        <button class="bg-lime-600 hover:bg-lime-400 px-4 py-1 rounded-lg" id="addButton">Add to cart</button>`;
 
     const prevImage = card.querySelector("#prevImage");
     prevImage.addEventListener("click", function (event) {
       event.preventDefault();
       --i;
       if (i < 0) {
-        i = e.images.length-1;
-      } 
-      console.log(i)
-        card.querySelector("#cardImage").src = e.images[i];
+        i = e.images.length - 1;
+      }
+      card.querySelector("#cardImage").src = e.images[i];
     });
 
     const nextImage = card.querySelector("#nextImage");
     nextImage.addEventListener("click", function (event) {
       event.preventDefault();
       ++i;
-      if (i > e.images.length-1) {
+      if (i > e.images.length - 1) {
         i = 0;
       }
-      console.log(i)
       card.querySelector("#cardImage").src = e.images[i];
+    });
+
+    const addButton = card.querySelector("#addButton");
+    addButton.addEventListener("click", function (event) {
+      event.preventDefault();
+      addToCart(id);
     });
 
     gridProducts.appendChild(card);
   });
+}
+
+function addToCart(id) {
+  let currentCard = products.find((e) => e.id === id);
+  currentCard = { ...currentCard, quantity: 1 };
+  console.log(currentCard);
+  let addedProduct = cartProducts.find((e) => e.id === currentCard.id);
+  if (addedProduct) {
+    currentCard = { ...addedProduct, quantity: (addedProduct.quantity += 1) };
+  }
+  cartProducts.push(currentCard);
+  totalPrice += currentCard.price;
+  const cartItem = document.createElement("li");
+  cartItem.innerHTML = `${currentCard.quantity} ${currentCard.name}: ${currentCard.price}${currentCard.coin} <button class="bg-rose-600 hover:bg-rose-400 px-3 py-1 rounded-full">x</button>`;
+
+  shopingCart.appendChild(cartItem);
+
+  total.innerText = `Total : ${totalPrice.toFixed(2)}${currentCard.coin}`;
+}
+
+function payProducts(event) {
+  event.preventDefault();
+  if (cartProducts.length > 0) {
+    cartProducts = [];
+    shopingCart.innerHTML = "";
+    totalPrice = 0;
+    total.innerText = `Total :`;
+    alert("thanks for your shoping");
+  } else {
+    alert("Please, add some products to your cart");
+  }
+}
+
+function cleanCart(event) {
+  event.preventDefault();
+  cartProducts = [];
+  shopingCart.innerHTML = "";
+  totalPrice = 0;
+  total.innerText = `Total :`;
 }
