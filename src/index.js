@@ -92,7 +92,7 @@ const total = document.getElementById("total");
 const shopingCart = document.getElementById("shopingCart");
 const payButton = document.getElementById("payButton");
 
-window.addEventListener("load", displayProducts);
+document.addEventListener("DOMContentLoaded", displayProducts);
 payButton.addEventListener("click", payProducts);
 cleanButton.addEventListener("click", cleanCart);
 
@@ -149,19 +149,43 @@ function displayProducts(event) {
 function addToCart(id) {
   let currentCard = products.find((e) => e.id === id);
   currentCard = { ...currentCard, quantity: 1 };
-  console.log(currentCard);
   let addedProduct = cartProducts.find((e) => e.id === currentCard.id);
+  let addedProductIndex = cartProducts.indexOf(addedProduct);
   if (addedProduct) {
     currentCard = { ...addedProduct, quantity: (addedProduct.quantity += 1) };
+    cartProducts.splice(addedProductIndex, 1);
+    shopingCart.removeChild(shopingCart.children[addedProductIndex]);
   }
   cartProducts.push(currentCard);
   totalPrice += currentCard.price;
   const cartItem = document.createElement("li");
-  cartItem.innerHTML = `${currentCard.quantity} ${currentCard.name}: ${currentCard.price}${currentCard.coin} <button class="bg-rose-600 hover:bg-rose-400 px-3 py-1 rounded-full">x</button>`;
+  cartItem.classList.add("flex");
+  cartItem.innerHTML = `<p>${currentCard.quantity} ${currentCard.name}: ${currentCard.price}${currentCard.coin}</p> <button class="bg-rose-600 hover:bg-rose-400 px-3 py-1 rounded-full" id="deleteItem">x</button>`;
 
   shopingCart.appendChild(cartItem);
 
   total.innerText = `Total : ${totalPrice.toFixed(2)}${currentCard.coin}`;
+  const deleteItemButton = cartItem.querySelector("#deleteItem");
+  deleteItemButton.addEventListener("click", function (event) {
+    event.preventDefault();
+    deleteItem(currentCard.id);
+  });
+}
+
+function deleteItem(id) {
+  const removedItem = cartProducts.find((e) => e.id === id);
+  const removedItemIndex = cartProducts.indexOf(removedItem);
+  if (removedItem.quantity > 1) {
+    removedItem.quantity -= 1;
+    const updatedItem = document.createElement("li");
+    updatedItem.classList.add("flex");
+    updatedItem.innerHTML = `<p>${removedItem.quantity} ${removedItem.name}: ${removedItem.price}${removedItem.coin}</p> <button class="bg-rose-600 hover:bg-rose-400 px-3 py-1 rounded-full" id="deleteItem">x</button>`;
+    shopingCart.appendChild(updatedItem);
+    shopingCart.removeChild(shopingCart.children[removedItemIndex]);
+  }
+  //   totalPrice -= removedItem.price
+  cartProducts.splice(removedItemIndex, 1);
+  shopingCart.removeChild(shopingCart.children[removedItemIndex]);
 }
 
 function payProducts(event) {
